@@ -4,10 +4,10 @@ require_once "../php/manageImg.php";
 ?>
 <body>
 <nav class="imageNav">
-    <a href="<?php echo DIR?>" class="button large">
+    <a href="<?php echo DIR."/#".$ref?>" class="button large">
         Zurück
     </a>
-    <a href="?command=del&<?php echo"name=". $pictureName?>" class="button large alert">
+    <a href="?command=del&<?php echo"name=". $pictureName."&ref=".$ref?>" class="button large alert">
         <?php
             if($type == "image"){
                 echo "Bild löschen";

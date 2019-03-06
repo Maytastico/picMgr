@@ -1,6 +1,5 @@
 
 .img-wrapper{
-    width: 33.33%;
     max-height: 500px;
     min-height: 300px;
     position: relative;
@@ -15,7 +14,6 @@
     transform: scale(1.2) rotate(5deg);
 }
 .video-wrapper{
-    width: 33.33%;
     max-height: 500px;
     min-height: 300px;
     position: relative;
@@ -27,7 +25,8 @@
     transition: 300ms;
 }
 .video-wrapper video:hover{
-    transform: scale(1.2) rotate(5deg);
+    transform: scale(1.2);
+    box-shadow: 1px 1px 20px black;
 }
 
 .imageNav{
@@ -38,14 +37,12 @@
     height: 100vh;
 }
 .fullImage img{
-    height: 100%;
+
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
-.fullVideo{
-    height: 100vh;
-}
+
 .fullVideo video{
     height: 100%;
     display: block;
@@ -65,4 +62,46 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     flex-direction: row;
+}
+.arrowUp{
+    padding: 10px;
+    width: 60px;
+    position: fixed;
+    background-color: #0c3d5d;
+    top: 90%;
+    z-index: 199999;
+}
+@media screen and (min-width: 1000px) {
+
+    .fullImage img {
+        height: 100%;
+    }
+    .video-wrapper {
+        width: 33.33%;
+    }
+    .img-wrapper {
+        width: 33.33%;
+    }
+    .fullVideo{
+        height: 100vh;
+    }
+}
+@media screen and (min-width: 600px) and (max-width: 1000px){
+
+    .fullImage img {
+        height: 100%;
+    }
+    .video-wrapper {
+        width: 50%;
+    }
+    .img-wrapper {
+        width: 50%;
+    }
+}
+@media screen and (max-width: 1000px) {
+
+    .fullImage img {
+        padding-top: 100px;
+    }
+
 }

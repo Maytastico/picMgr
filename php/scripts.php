@@ -37,22 +37,23 @@ function checkMovie($filename){
 //Reads all file in Directory and show them
 function showDirPics($folderpath){
     $handle=opendir ($folderpath);
-
+    $index = -2;
     while ($datei = readdir ($handle)) {
         $filename =  explode('.', $datei);
         if(!(trim($datei) == ".." || trim($datei) == ".")){
             if(checkPic($datei) == true) {
-                echo "<a href='".DIR."/php/manageImg.php?type=image&name=". $datei ."' class='img-wrapper'>";
+                echo "<a id='". $index ."' href='".DIR."/php/manageImg.php?type=image&name=". $datei ."&ref=".$index."' class='img-wrapper'>";
                 echo "<img src='" . FULLPATH . $datei. "'>";
                 //fileDate($folderpath . $datei);
                 echo "</a>\n";
             }
             elseif (checkMovie($datei) == true){
-                echo "<a href='".DIR."/php/manageImg.php?type=video&name=". $datei ."' class='video-wrapper'>";
+                echo "<a id='". $index ."' href='".DIR."/php/manageImg.php?type=video&name=". $datei ."&ref=".$index."' class='video-wrapper'>";
                 echo "<video  src='" . FULLPATH . $datei. "' autoplay muted loop>";
                 echo "</a>\n";
             }
         }
+        $index++;
     }
     closedir($handle);
 }

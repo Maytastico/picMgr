@@ -38,6 +38,13 @@
         $command = null;
     }
 
+    if( isset($_GET['ref'])) {
+        if(is_numeric(trim($_GET['ref']))) {
+            $ref = $_GET['ref'];
+        }
+    }else{
+        $ref = null;
+    }
 
     if($type != null && $type == "image" || $type == "video"){
         require "../_includes/ImageView.php";
@@ -45,11 +52,17 @@
 
     if($pictureName != null && $command == "del"){
         $toBeDeleted = "..".IMAGEDIR.$pictureName;
+        $delRef = 0;
+        if($ref == 0){
+            $delRef = $ref + 1;
+        }else{
+            $delRef = $ref - 1;
+        }
         echo "<div class='message'>";
             if (deleteFile($toBeDeleted) == true){
-                echo'<script language="javascript" type="text/javascript">window.location.replace("' .  DIR . '"); </script>';
+                echo'<script language="javascript" type="text/javascript">window.location.replace("' .  DIR . '/#' . $delRef .'"); </script>';
             }else{
-                echo"<br><a href=\"".DIR."\" class=\"button large\"> Zurück</a>";
+                echo"<br><a href='".DIR."/#".$delRef."' class=\"button large\"> Zurück</a>";
             }
         echo "</div>";
     }
