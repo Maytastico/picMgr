@@ -8,12 +8,21 @@ require_once "../php/manageImg.php";
         Zurück
     </a>
     <a href="?command=del&<?php echo"name=". $pictureName?>" class="button large alert">
-        Bild löschen
+        <?php
+            if($type == "image"){
+                echo "Bild löschen";
+            }
+            elseif($type == "video"){
+                echo "Video löschen";
+            }
+        ?>
     </a>
 </nav>
-<?php
-if($type != null && $type == "image"){
-    showPicture(FULLPATH.$pictureName);
-}
-?>
+    <?php
+        if($type != null && $type == "image"){
+            showPicture(FULLPATH.$pictureName);
+        }elseif ($type != null && $type == "video"){
+            showVideo(FULLPATH.$pictureName);
+        }
+    ?>
 </body>

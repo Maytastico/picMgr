@@ -39,9 +39,10 @@
     }
 
 
-    if($type != null && $type == "image"){
+    if($type != null && $type == "image" || $type == "video"){
         require "../_includes/ImageView.php";
     }
+
     if($pictureName != null && $command == "del"){
         $toBeDeleted = "..".IMAGEDIR.$pictureName;
         echo "<div class='message'>";
