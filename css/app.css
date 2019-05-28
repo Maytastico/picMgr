@@ -1,12 +1,14 @@
 
 .img-wrapper{
     max-height: 500px;
-    min-height: 300px;
     position: relative;
     overflow: hidden;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
 }
 .img-wrapper img{
-    height: 100%;
+    height:100%;
     width: 100%;
     transition: 300ms;
 }
@@ -42,9 +44,10 @@
     margin-left: auto;
     margin-right: auto;
 }
-
+.fullVideo{
+    height: 100vh;
+}
 .fullVideo video{
-    height: 100%;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -55,7 +58,6 @@
     vertical-align: middle;
     margin: 0 auto;
     color: white;
-    padding: 15px 0px;
 }
 .flex{
     display: flex;
@@ -63,17 +65,91 @@
     justify-content: flex-start;
     flex-direction: row;
 }
+.flex.space{
+    justify-content: space-around;
+}
+.flex.nowarp{
+    flex-wrap: nowrap;
+}
+.padding{
+    padding: 10px;
+}
 .arrowUp{
     padding: 10px;
-    width: 60px;
+    width: 90px;
     position: fixed;
-    background-color: #0c3d5d;
-    top: 90%;
+    background-color: black;
+    top: calc(100% - 100px);
+    left: 0;
     z-index: 199999;
+    border-bottom-right-radius: 10%;
+    border-top-right-radius: 10%;
 }
+.arrowUp img{
+    width: 100%;
+}
+#navigationContent{
+    margin: 5px;
+}
+
+nav{
+    position: fixed;
+    z-index: 199999;
+    display:flex;
+    top: 0;
+    width:100%;
+}
+#navigationContent{
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.two-columns{
+    max-width: 50%;
+}
+#menuButton{
+    width: 90px;
+    height: 90px;
+    display:flex;
+    justify-content: center;
+    color: white;
+    font-size: 50px;
+    background-color: black;
+    padding: 10px;
+    top: 0;
+    left: 0;
+    border-bottom-right-radius: 10%;
+}
+.time{
+    position: absolute;
+    z-index: 1;
+    text-align: center;
+    width: 100%;
+    color: black;
+    background-color: rgba(255,255,255,0.7);
+}
+.fadeIn{
+    animation-name: fadein;
+    animation-duration: 500ms;
+}
+.fadeOut{
+    animation-name: fadeout;
+    animation-duration: 1s;
+}
+#navigationContent{
+    background-color: rgba(0,0,0,0.6);
+    overflow: hidden;
+    border-radius: 2%;
+    box-shadow: 0 0 1px white ;
+}
+
 @media screen and (min-width: 1000px) {
 
     .fullImage img {
+        height: 100%;
+    }
+    .fullVideo video {
         height: 100%;
     }
     .video-wrapper {
@@ -91,6 +167,9 @@
     .fullImage img {
         height: 100%;
     }
+    .fullVideo video {
+        height: 100%;
+    }
     .video-wrapper {
         width: 50%;
     }
@@ -104,4 +183,53 @@
         padding-top: 100px;
     }
 
+}
+@media screen and (min-width: 720px) and (min-height: 1280px){
+    .arrowUp{
+        width: 200px;
+        height: 200px;
+        top: calc(100% - 300px);
+    }
+    #menuButton{
+        width: 200px;
+        height: 200px;
+        font-size: 100px;
+    }
+    #navigationContent{
+        font-size: 2.5rem;
+    }
+    #navigationContent .button{
+         font-size: 2.2rem;
+     }
+    #navigationContent input{
+        font-size: 2.2rem;
+        height: 40%;
+    }
+}
+@keyframes fadein {
+    0%{
+        max-width: 0%;
+        opacity: 0;
+    }
+    90%{
+        opacity: 1;
+    }
+    100%{
+        max-width: 50%;
+    }
+}
+@keyframes fadeout {
+    0%{
+        max-width: 50%;
+
+    }
+    10%{
+        opacity: 1;
+    }
+    90%{
+        max-width: 0%;
+    }
+    100%{
+        opacity: 0;
+    }
 }

@@ -1,21 +1,22 @@
 <?php
 require_once "variables.php";
 
-//Writes the time, when the file was created, into the document
-function fileDate($filepath){
-    date('m.d.y');
-    if (file_exists($filepath)) {
-        echo date ("Y.m.d/H:i:s.", filemtime($filepath));
-    }else{
-        echo "File is not existing!";
+function sortItems($path){
+    $verzeichnis = array_slice(scanDir($path), 2);
+    $files = array();
+    foreach ($verzeichnis as $datei) {
+        $pfad = $path . $datei;
+        $files [filemtime($pfad)] = $datei;
     }
+    krsort ($files);
+    return $files;
 }
 //looks at the end of the filename after a String jpg or png
 function checkPic($filename){
     $filename =  explode('.', $filename);
-    $filetype = $filename[1];
+    $filetype = $filename[count($filename) - 1];
 
-    if($filetype== "jpg" || $filetype == "JPG" || $filetype == "png" || $filetype == "PNG") {
+    if($filetype== "jpeg" || $filetype== "jpg" || $filetype == "JPG" || $filetype == "png" || $filetype == "PNG") {
         return true;
     }
     else{
@@ -25,7 +26,7 @@ function checkPic($filename){
 //Looks at the end of the filename, after a String mov or mp4
 function checkMovie($filename){
     $filename =  explode('.', $filename);
-    $filetype = $filename[1];
+    $filetype = $filename[count($filename) - 1];
 
     if($filetype== "mov" || $filetype == "MOV" || $filetype == "mp4" || $filetype == "MP4") {
         return true;
@@ -34,28 +35,54 @@ function checkMovie($filename){
         return false;
     }
 }
-//Reads all file in Directory and show them
-function showDirPics($folderpath){
-    $handle=opendir ($folderpath);
-    $index = -2;
-    while ($datei = readdir ($handle)) {
-        $filename =  explode('.', $datei);
-        if(!(trim($datei) == ".." || trim($datei) == ".")){
-            if(checkPic($datei) == true) {
-                echo "<a id='". $index ."' href='".DIR."/php/manageImg.php?type=image&name=". $datei ."&ref=".$index."' class='img-wrapper'>";
-                echo "<img src='" . FULLPATH . $datei. "'>";
-                //fileDate($folderpath . $datei);
-                echo "</a>\n";
-            }
-            elseif (checkMovie($datei) == true){
-                echo "<a id='". $index ."' href='".DIR."/php/manageImg.php?type=video&name=". $datei ."&ref=".$index."' class='video-wrapper'>";
-                echo "<video  src='" . FULLPATH . $datei. "' autoplay muted loop>";
-                echo "</a>\n";
-            }
+//Reads all files in Directory and shows them
+function showPics($files){
+    $index = 0;
+    foreach ($files as $key => $datei) {
+        if (checkPic($datei) == true) {
+            echo "<a id='" . $index . "' href='" . DIR . "/php/manageImg.php?type=image&name=" . $datei . "&ref=" . $index . "' class='img-wrapper'>";
+            echo "<img src='" . FULLPATH . $datei . "'>";
+            echo '<div class="time">';
+            echo date("H:i:s Y.m.d", $key);
+            echo '</div>';
+            echo "</a>\n";
+
+        } elseif (checkMovie($datei) == true) {
+            echo "<a id='" . $index . "' href='" . DIR . "/php/manageImg.php?type=video&name=" . $datei . "&ref=" . $index . "' class='video-wrapper'>";
+            echo "<video  src='" . FULLPATH . $datei . "' autoplay muted loop>";
+            echo '<div class="time">';
+            echo date("H:i:s Y.m.d", $key);
+            echo "</div>";
+            echo "</a>\n";
         }
         $index++;
     }
-    closedir($handle);
+}
+//Reads all files in Directory, filters them and shows them
+function filteredPics($files, $date){
+    $index = 0;
+    foreach ($files as $key => $datei) {
+        if(compareFileDate(ROOT . FULLPATH . $datei, $date)) {
+            if (checkPic($datei) == true) {
+                echo "<a id='" . $index . "' href='" . DIR . "/php/manageImg.php?type=image&name=" . $datei . "&ref=" . $index . "' class='img-wrapper'>";
+                echo "<img src='" . FULLPATH . $datei . "'>";
+                echo '<div class="time">';
+                echo date("H:i:s Y.m.d", $key);
+                echo "</div>";
+                echo "</a>\n";
+
+            } elseif (checkMovie($datei) == true) {
+                echo "<a id='" . $index . "' href='" . DIR . "/php/manageImg.php?type=video&name=" . $datei . "&ref=" . $index . "' class='video-wrapper'>";
+                echo "<video  src='" . FULLPATH . $datei . "' autoplay muted loop>";
+                echo '<div class="time">';
+                echo date("H:i:s Y.m.d", $key);
+                echo "</div>";
+                echo "</a>\n";
+            }
+            $index++;
+        }
+
+    }
 }
 //Shows the Picture
 function showPicture($path){
@@ -70,17 +97,47 @@ function showVideo($path){
 }
 //Deletes a file
 function deleteFile($filePath){
+    $status = flase;
+    //Checks whether the file exists
     if (is_writable($filePath)) {
-        unlink($filePath);
+        $status=unlink($filePath);
+    }else{
+        echo "<div style='background: red; padding:50px 0;'>";
+        echo "<br>Die Datei ist nicht beschreibar!<br>";
+        echo "</div>";
+        return false;
+    }
+    //Checks whether the deleting process was successful
+    if($status == true){
         echo "<div style='background: green'>";
-        echo "<br>File was deleted successfully!";
+        echo "<br>Datei wurde gelöscht!";
         echo "</div>";
         return true;
     }else{
-        echo "<div style='background: red'>";
-        echo "<br>File does not exist<br>";
-        echo $filePath;
+        echo "<div style='background: red; padding:50px 0;'>";
+        echo "<br>Die Datei konnte nicht gelöscht werden!<br>";
         echo "</div>";
+        return false;
+    }
+}
+//For Filters
+function convertToTimeStamp($dateAsString, $delimiter){
+    $dateAsArray = explode($delimiter, $dateAsString);
+    $timestamp = mktime(0,0,0, $dateAsArray[1], $dateAsArray[2], $dateAsArray[0]);
+    if($timestamp != false){
+        return $timestamp;
+    }else{
+        return false;
+    }
+}
+function compareFileDate($file, $requestedTime){
+    $dateOfFile = date("Y-m-d",filemtime($file));
+    $tFileInStamp = convertToTimeStamp($dateOfFile, "-");
+    $requestedTimeInStamp = convertToTimeStamp($requestedTime, "-");
+
+    if($requestedTimeInStamp == $tFileInStamp){
+        return true;
+    }else{
         return false;
     }
 }

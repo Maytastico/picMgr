@@ -46,13 +46,22 @@
         $ref = null;
     }
 
+    if( isset($_GET['filter'])) {
+        if(trim($_GET['filter'])) {
+            $filter = $_GET['filter'];
+        }
+    }else{
+        $filter = null;
+}
+    //If a type is decleared it imports another php file
     if($type != null && $type == "image" || $type == "video"){
         require "../_includes/ImageView.php";
     }
 
     if($pictureName != null && $command == "del"){
-        $toBeDeleted = "..".IMAGEDIR.$pictureName;
+        $toBeDeleted = ROOT.DIR.IMAGEDIR.$pictureName;
         $delRef = 0;
+        echo $toBeDeleted;
         if($ref == 0){
             $delRef = $ref + 1;
         }else{
